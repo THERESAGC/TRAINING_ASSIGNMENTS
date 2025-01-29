@@ -1,0 +1,83 @@
+
+1) Give all irons of the brand Philips or Tefal that cost 30 euros or less, that are red, have a power of 2000 or
+more and have a cord storage space and spray function.
+Ans:
+
+db.irons.find({
+  brand: { $in: ['Philips', 'Tefal'] },
+  price: { $lte: 30 },
+  "technically.power" :{ $gte:2000}, 
+  $text: { $search:"red" },
+extras:{$in:["cord storage space","spray function"]}
+})
+
+2) Give the model, price and brand of the most expensive iron that is not red, weighing less than 2 kilos, that
+ has at least 2 plus points, a maximum height of 20 centimeters and that does not have cord storage space as
+ extra
+Ans:
+db.irons.aggregate([
+  {
+    $match: {
+      "technically.weight": { $lt: 2 },
+      "measures.height": { $lt: 20 },
+      extras: { $nin: ["cord storage space"] },
+      "description.color": { $not: /red/i },
+      "reviews.plus": { $exists: true, $not: { $size: 0 } }
+    }
+  },
+  {
+    $project: {
+      model: 1,
+      price: 1,
+      brand: 1,
+      plusCount: { $size: "$reviews.plus" }
+    }
+  },
+  {
+    $match: {
+      plusCount: { $gte: 2 }
+    }
+  },
+  {
+    $sort: { price: -1 }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $project: {
+      _id: 0,
+      model: 1,
+      price: 1,
+      brand: 1
+    }
+  }
+])
+
+ 3 Loop through the irons. Increase the price of all irons with 10%.
+
+db.irons.updateMany(
+  { brand: "Philips" },
+  { $mul: { price: 0.90 } }  // 10% discount
+)
+db.irons.updateMany(
+  {},
+  { $mul: { price: 1.10 } }
+)
+
+During the sales, each brand gives a specific discount.
+
+db.irons.updateMany(
+  { brand: "Tefal" },
+  { $mul: { price: 0.85 } }  // 15% discount
+)
+
+db.irons.updateMany(
+  { brand: "Panasonic" },
+  { $mul: { price: 0.80 } }  // 20% discount
+)
+
+Give all laptops with a price between 500 and 1000 euro or with a hard disk of 750 GB
+
+
+
