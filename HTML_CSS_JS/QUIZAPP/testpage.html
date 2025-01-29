@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Quiz</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: rgba(167, 248, 167, 0.37);
+            padding: 12px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        .question {
+            display: none;
+            border: 2px solid #4CAF50;
+            background-color: #e0f7fa; 
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .question.active {
+            display: block;
+        }
+        .progress {
+            height: 20px;
+            margin-bottom: 20px;
+        }
+        #timecomponent {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff0000; /* Changed timer color */
+            background-color: #fff3cd; /* Added background color */
+            padding: 10px;
+            border: 2px solid #ff0000; /* Added border */
+            border-radius: 10px;
+        }
+        #result {
+            display: none;
+        }
+        .all-the-best {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body onload="timer()">
+    <div id="timecomponent"></div>
+    <h3>Welcome <span id="displayFname"></span>,</h3>
+    <div class="container">
+        <h1 class="text-center" style="color: #3b603c;">Java Quiz</h1><br>
+        <div class="all-the-best">All the best!</div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%;" id="progressBar"></div>
+        </div>
+        <div id="quizContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div><br>
+        <button class="btn btn-primary" id="nextButton" onclick="nextQuestion()">Next</button>
+        <button class="btn btn-success" id="submitButton" onclick="submitQuiz()" style="display: none;">Submit</button>
+        <div id="result">
+            <h2 id="resultMessage"></h2>
+            <h3 id="resultScore"></h3>
+        </div>
+    </div>
+    <script src="logic.js"></script>
+</body>
+<footer><small><center>&copy; All rights reserved to TGC</center></small></footer>
+</html>
