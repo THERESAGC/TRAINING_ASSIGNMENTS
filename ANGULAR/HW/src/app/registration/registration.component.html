@@ -1,0 +1,41 @@
+<form (ngSubmit)="onSubmit()" #registrationForm="ngForm" class="container mt-5">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="formData.name" required class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="city" class="form-label">City:</label>
+      <select id="city" name="city" [(ngModel)]="formData.city" required class="form-select">
+        <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="dob" class="form-label">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" [(ngModel)]="formData.dob" required class="form-control">
+    </div>
+    <div class="mb-3">
+      <label for="state" class="form-label">State:</label>
+      <select id="state" name="state" [(ngModel)]="formData.state" required class="form-select">
+        <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" [(ngModel)]="formData.phone" required class="form-control">
+    </div>
+    <button type="submit" class="btn btn-secondary">Register</button>
+  </form>
+  
+  <!-- <div *ngIf="submitted" class="container mt-5">
+    <h2>Registration Details</h2>
+    <p><strong>Name:</strong> {{ formData.name }}</p>
+    <p><strong>Email:</strong> {{ formData.email }}</p>
+    <p><strong>City:</strong> {{ formData.city }}</p>
+    <p><strong>Date of Birth:</strong> {{ formData.dob }}</p>
+    <p><strong>State:</strong> {{ formData.state }}</p>
+    <p><strong>Phone Number:</strong> {{ formData.phone }}</p>
+  </div> -->
