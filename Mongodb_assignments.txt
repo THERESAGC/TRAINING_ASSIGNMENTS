@@ -1,5 +1,5 @@
 
-1) Give all irons of the brand Philips or Tefal that cost 30 euros or less, that are red, have a power of 2000 or
+ Give all irons of the brand Philips or Tefal that cost 30 euros or less, that are red, have a power of 2000 or
 more and have a cord storage space and spray function.
 Ans:
 
@@ -11,7 +11,7 @@ db.irons.find({
 extras:{$in:["cord storage space","spray function"]}
 })
 
-2) Give the model, price and brand of the most expensive iron that is not red, weighing less than 2 kilos, that
+ Give the model, price and brand of the most expensive iron that is not red, weighing less than 2 kilos, that
  has at least 2 plus points, a maximum height of 20 centimeters and that does not have cord storage space as
  extra
 Ans:
@@ -54,7 +54,7 @@ db.irons.aggregate([
   }
 ])
 
- 3 Loop through the irons. Increase the price of all irons with 10%.
+ Loop through the irons. Increase the price of all irons with 10%.
 
 db.irons.updateMany(
   { brand: "Philips" },
@@ -79,5 +79,161 @@ db.irons.updateMany(
 
 Give all laptops with a price between 500 and 1000 euro or with a hard disk of 750 GB
 
+  db.laptops.find({
+    $or: [
+     { price: { $gte: 500, $lte: 1000 } },
+     { "properties.HD": "750GB" }
+    ]
+  });
 
+ Update the OS of laptops with "Windows 10" to "Windows 8":
+  db.laptops.updateMany(
+    { "properties.OS": "Windows 10" },
+    { $set: { "properties.OS": "Windows 8" } }
+  );
+
+ Find the name, price, and OS of the two cheapest laptops:
+  db.laptops.find(
+    {},
+    { name: 1, price: 1, "properties.OS": 1 }
+  ).sort({ price: 1 }).limit(2);
+
+ Find laptops with reviews having a score between 4 and 4.2:
+  db.laptops.find({
+    reviews: {
+     $elemMatch: { score: { $gte: 4, $lte: 4.2 } }
+    }
+  });
+
+ Find laptops with 2 USB 3.0 ports, supporting Dutch language, and at least 2 languages:
+  db.laptops.find({
+    "properties.USB.USB3_0": 2,
+    LanguageOS: { $elemMatch: { $eq: "Dutch" } },
+    $where: "this.LanguageOS.length >= 2"
+  });
+
+
+ How do you do an 'equal to' query? Just match the value for the queried key:
+  db.comedy.find({ year: 2012 });
+
+ Find all movies released in the year 2013:
+  db.comedy.find({ year: 2013 });
+
+ Find all movies from the year 2011 until now:
+  db.comedy.find({ year: { $gte: 2011 } });
+
+) Find all movies with a budget over 50 million dollars:
+  db.comedy.find({ 'merits.budget': { $gt: 50 } });
+
+ Find all movies of which the running time is longer than 105 minutes:
+  db.comedy.find({ 'technical.runningTime': { $gt: 105 } });
+
+ Find all movies of which the language is English:
+  db.comedy.find({ 'technical.language': 'English' });
+
+Find all movies with running time between 100 and 110 minutes:
+  db.comedy.find({ 'technical.runningTime': { $gte: 100, $lte: 110 } });
+
+Give name and box office of all movies with box office over 500 million dollars:
+  db.comedy.find(
+    { 'merits.boxOffice': { $gt: 500 } },
+    { name: 1, 'merits.boxOffice': 1 }
+  );
+
+ Give name and box office of all movies with box office over 500, excluding _id:
+  db.comedy.find(
+    { 'merits.boxOffice': { $gt: 500 } },
+    { name: 1, 'merits.boxOffice': 1, _id: 0 }
+  );
+
+ Find all comedies with a budget of 50, 60, 70, or 80 million dollars:
+   db.comedy.find({ 'merits.budget': { $in: [50, 60, 70, 80] } });
+
+ Find all comedies that have a running time other than 100 or 105 minutes:
+   db.comedy.find({ 'technical.runningTime': { $nin: [100, 105] } });
+
+ Find all comedies with the name "Ted" or "The Hangover" from the year 2012:
+   db.comedy.find({
+    $or: [
+      { name: 'Ted', year: 2012 },
+      { name: 'The Hangover', year: 2012 }
+    ]
+   });
+
+ Find all comedies with a box office over 500 from the year 2010 or 2011:
+   db.comedy.find({
+    $or: [
+      { year: 2010 },
+      { year: 2011 }
+    ],
+    'merits.boxOffice': { $gt: 500 }
+   });
+
+ Find all comedies except for "Ted" or "The Hangover":
+   db.comedy.find({
+    name: { $nin: ['Ted', 'The Hangover'] }
+   });
+
+ Find all comedies not released in the years 2010 or 2011:
+   db.comedy.find({
+    year: { $nin: [2010, 2011] }
+   });
+
+ Find all movies for which the box office exceeded 500 million dollars and the budget was lower than or equal to 50 million dollars:
+   db.comedy.find({
+    $and: [
+      { 'merits.boxOffice': { $gt: 500 } },
+      { 'merits.budget': { $lte: 50 } }
+    ]
+   });
+
+ Find all movies that have comments by Rob or Alex:
+   db.comedy.find({
+    comments: { $elemMatch: { by: { $in: ['Rob', 'Alex'] } } }
+   });
+
+ Find all movies with 4 actors:
+   db.comedy.find({ cast: { $size: 4 } });
+
+ Find all movies for which the comments contain the word "love":
+   db.comedy.find({ 'comments.text': /love/i });
+
+ Find all movies for which the comments do not contain the word "like":
+   db.comedy.find({ 'comments.text': { $not: /like/i } });
+
+ Find all comedies that were not released in 2012:
+   db.comedy.find({ year: { $ne: 2012 } });
+
+ Find all comedies that were released in 2011 or later with Ed Helms as part of the cast:
+   db.comedy.find({
+    year: { $gte: 2011 },
+    cast: 'Ed Helms'
+   });
+
+ Find all movies that were commented by Steve and have a budget of 50 million dollars or more:
+   db.comedy.find({
+    comments: { $elemMatch: { by: 'Steve' } },
+    'merits.budget': { $gte: 50 }
+   });
+
+ Find all movies with 3 comments or more:
+   db.comedy.find({
+    comments: { $size: { $gte: 3 } }
+   });
+
+ Find all movies commented by Anne and Robin:
+   db.comedy.find({
+    comments: { $all: [{ by: 'Anne' }, { by: 'Robin' }] }
+   });
+
+ Find all movies that have a sequel:
+   db.comedy.find({ sequel: { $exists: true } });
+
+ Find all movies that have a sequel of "The Hangover":
+   db.comedy.find({ sequel: 'The Hangover' });
+
+ Find all movies which have a field "prizes" and which won more than 10 prizes:
+   db.comedy.find({
+    'technical.prizes': { $exists: true, $gt: 10 }
+   });
 
